@@ -50,7 +50,7 @@ spec:
             enabled: true
           existingSecretAdminPassword: harbor-admin-secret
           existingSecretAdminPasswordKey: HARBOR_ADMIN_PASSWORD
-    - repoURL: https://github.com/InchanterX/kuber_education.git
+    - repoURL: https://github.com/InchanterX/homelab-infrastructure.git
       targetRevision: main
       path: kustomization/harbor/overlays/dev
 

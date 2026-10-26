@@ -9,7 +9,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/InchanterX/kuber_education.git
+    repoURL: https://github.com/InchanterX/homelab-infrastructure.git
     targetRevision: main
     path: argocd/applications
 
@@ -20,7 +20,7 @@ spec:
   revisionHistoryLimit: 10
   info:
     - name: 'Core Application:'
-      value: 'https://github.com/InchanterX/kuber_education/argocd/apps-dev.yaml'
+      value: 'https://github.com/InchanterX/homelab-infrastructure/argocd/apps-dev.yaml'
 
   syncPolicy:
     syncOptions:

@@ -11,7 +11,7 @@ spec:
   project: infra-project
 
   source:
-    repoURL: https://github.com/InchanterX/kuber_education.git
+    repoURL: https://github.com/InchanterX/homelab-infrastructure.git
     targetRevision: main
     path: kustomization/local-path/overlays/dev
 

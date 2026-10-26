@@ -18,10 +18,10 @@ spec:
         - /data
 
   sources:
-    - repoURL: https://github.com/InchanterX/kuber_education.git
+    - repoURL: https://github.com/InchanterX/homelab-infrastructure.git
       targetRevision: main
       path: argocd/install
-    - repoURL: https://github.com/InchanterX/kuber_education.git
+    - repoURL: https://github.com/InchanterX/homelab-infrastructure.git
       targetRevision: main
       path: kustomization/argocd-router/overlays/dev
 
