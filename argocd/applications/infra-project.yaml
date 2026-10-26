@@ -1,0 +1,52 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: infra-project
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  description: Project for infrastructure elements
+
+  # signatureKeys:
+  #   - keyID: D5E51FE406BF3E23
+  #   - keyID: B5690EEEBB952194
+
+  sourceRepos:
+    - https://github.com/InchanterX/kuber_education
+    - https://bitnami.github.io/sealed-secrets
+    - https://victoriametrics.github.io/helm-charts/
+    - https://stakater.github.io/stakater-charts
+    - https://charts.jetstack.io
+    - https://helm.goharbor.io
+    - registry.faberge-eggs.ru/mirror
+
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: 'default'
+    - server: https://kubernetes.default.svc
+      namespace: 'cert-manager'
+    - server: https://kubernetes.default.svc
+      namespace: 'project-service-dev'
+    - server: https://kubernetes.default.svc
+      namespace: 'kube-system'
+    - server: https://kubernetes.default.svc
+      namespace: 'argocd'
+    - server: https://kubernetes.default.svc
+      namespace: 'victoria-stack'
+    - server: https://kubernetes.default.svc
+      namespace: 'infrastructure-dev'
+    - server: https://kubernetes.default.svc
+      namespace: 'harbor'
+    - server: https://kubernetes.default.svc
+      namespace: 'local-path-storage'
+    - server: https://kubernetes.default.svc
+      namespace: 'vault'
+    - server: https://kubernetes.default.svc
+      namespace: 'vault-secrets-operator'
+    - server: https://kubernetes.default.svc
+      namespace: 'orchestra'
+
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'

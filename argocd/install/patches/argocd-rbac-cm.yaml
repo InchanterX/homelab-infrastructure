@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+data:
+  policy.default: ""
+  policy.csv: |-
+    p, role:deployer, applications, sync, */*, allow
+    p, role:deployer, applications, get, */*, allow
+    p, role:deployer, applications, action/*, */*, allow
+    g, myuser, role:deployer
+    p, orchestra, applications, *, hackathon/*, allow
+    p, orchestra, logs, get, hackathon/*, allow
+    p, orchestra, projects, get, hackathon, allow

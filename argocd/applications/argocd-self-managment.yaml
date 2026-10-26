@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-self-manager
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  project: infra-project
+
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      name: argocd-notifications-secret
+      jsonPointers:
+        - /data
+
+  sources:
+    - repoURL: https://github.com/InchanterX/kuber_education.git
+      targetRevision: main
+      path: argocd/install
+    - repoURL: https://github.com/InchanterX/kuber_education.git
+      targetRevision: main
+      path: kustomization/argocd-router/overlays/dev
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

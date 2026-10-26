@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: certification
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  project: infra-project
+
+  source:
+    repoURL: https://github.com/InchanterX/kuber_education.git
+    targetRevision: main
+    path: kustomization/cert-manager/overlays/dev
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: infrastructure-dev
+
+  info:
+    - name: 'Certification:'
+      value: 'https://github.com/InchanterX/kuber_education'
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+      - CreateNamespace=true
+      - SkipDryRunOnMissingResource=true
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

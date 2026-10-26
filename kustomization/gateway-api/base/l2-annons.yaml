@@ -1,0 +1,11 @@
+apiVersion: cilium.io/v2alpha1
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: home-l2
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  interfaces:
+    - ens18
+  externalIPs: true
+  loadBalancerIPs: true

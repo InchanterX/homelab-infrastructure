@@ -1,0 +1,31 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: argocd
+resources:
+  - namespace.yaml
+  - https://raw.githubusercontent.com/argoproj/argo-cd/v3.4.5/manifests/install.yaml
+  - https://github.com/argoproj/argo-cd//examples/k8s-rbac/argocd-server-applications?ref=v3.4.5
+  # - installer.yaml
+
+patches:
+  - path: patches/argocd-cm.yaml
+    target:
+      kind: ConfigMap
+      name: argocd-cm
+  - path: patches/argocd-rbac-cm.yaml
+    target:
+      kind: ConfigMap
+      name: argocd-rbac-cm
+  - path: patches/argocd-cmd-params-cm.yaml
+    target:
+      kind: ConfigMap
+      name: argocd-cmd-params-cm
+  - path: patches/argocd-notifications-cm.yaml
+    target:
+      kind: ConfigMap
+      name: argocd-notifications-cm
+  - path: patches/argocd-gpg-keys-cm.yaml
+    target:
+      kind: ConfigMap
+      name: argocd-gpg-keys-cm

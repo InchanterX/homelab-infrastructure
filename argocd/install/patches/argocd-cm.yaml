@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+data:
+  accounts.deployer: apiKey, login
+  accounts.orchestra: apiKey
+  url: https://argocd.faberge-eggs.ru

@@ -1,0 +1,88 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: home-gateway
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  gatewayClassName: cilium
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: lab.faberge-eggs.ru
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: lab-tls
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: registry-https
+      protocol: HTTPS
+      port: 443
+      hostname: registry.faberge-eggs.ru
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: registry-tls
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: argocd-https
+      protocol: HTTPS
+      port: 443
+      hostname: argocd.faberge-eggs.ru
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: argocd-tls
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: vault-https
+      protocol: HTTPS
+      port: 443
+      hostname: vault.faberge-eggs.ru
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: vault-tls
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: conductor-https
+      protocol: HTTPS
+      port: 443
+      hostname: conductor.faberge-eggs.ru
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: conductor-tls
+      allowedRoutes:
+        namespaces:
+          from: All
+    - name: hack-wildcard-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.hack.faberge-eggs.ru"
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: hack-wildcard-tls
+      allowedRoutes:
+        namespaces:
+          from: All
