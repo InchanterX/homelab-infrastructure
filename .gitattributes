@@ -1,0 +1,5 @@
+*.yaml linguist-detectable=true
+*.yml linguist-detectable=true
+
+charts/harbor/** linguist-vendored=true
+argocd/install/installer.yaml linguist-generated=true

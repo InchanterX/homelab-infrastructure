@@ -86,3 +86,15 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+    - name: demo-wildcard-https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.demo.faberge-eggs.ru"
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: demo-wildcard-tls
+      allowedRoutes:
+        namespaces:
+          from: All
