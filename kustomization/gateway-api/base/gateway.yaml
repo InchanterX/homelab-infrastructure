@@ -74,6 +74,18 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+    - name: curves-dev-https
+      protocol: HTTPS
+      port: 443
+      hostname: curves-dev.faberge-eggs.ru
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: conductor-tls
+      allowedRoutes:
+        namespaces:
+          from: All
     - name: hack-wildcard-https
       protocol: HTTPS
       port: 443
