@@ -82,7 +82,7 @@ spec:
         mode: Terminate
         certificateRefs:
           - kind: Secret
-            name: conductor-tls
+            name: curves-dev-tls
       allowedRoutes:
         namespaces:
           from: All
