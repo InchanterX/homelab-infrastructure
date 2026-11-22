@@ -22,10 +22,6 @@ spec:
       targetRevision: main
       ref: values
 
-    - repoURL: https://github.com/InchanterX/homelab-infrastructure.git
-      targetRevision: main
-      path: kustomization/gitlab/overlays/dev
-
   destination:
     server: https://kubernetes.default.svc
     namespace: gitlab
