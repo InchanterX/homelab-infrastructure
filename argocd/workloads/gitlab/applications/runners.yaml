@@ -10,9 +10,9 @@ spec:
   project: gitlab
 
   sources:
-    - repoURL: https://gitlab.com/gitlab-org/charts/gitlab-runner
-      targetRevision: v0.95.0
-      path: .
+    - repoURL: https://charts.gitlab.io/
+      chart: gitlab-runner
+      targetRevision: "0.95.0"
       helm:
         releaseName: runners
         valueFiles:
