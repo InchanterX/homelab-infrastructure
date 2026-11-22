@@ -100,7 +100,11 @@ gitlab-runner:
   install: false
 
 gitlab:
+  # Small single-node homelab: reserve less CPU, allow bursts without CPU limits.
   gitaly:
+    resources:
+      requests:
+        cpu: 100m
     persistence:
       enabled: true
       storageClass: local-path-retain
@@ -109,10 +113,27 @@ gitlab:
   webservice:
     minReplicas: 1
     maxReplicas: 1
+    resources:
+      requests:
+        cpu: 100m
+    workhorse:
+      resources:
+        requests:
+          cpu: 25m
 
   sidekiq:
     minReplicas: 1
     maxReplicas: 1
+    resources:
+      requests:
+        cpu: 100m
+
+  gitlab-shell:
+    minReplicas: 1
+    maxReplicas: 1
+    resources:
+      requests:
+        cpu: 25m
 
   toolbox:
     backups:
