@@ -6,6 +6,13 @@ set +x
 set -euo pipefail
 umask 077
 
+# bootstrap: DB passwords and RPC; storage: Garage S3 only; runner: token only.
+MODE="${1:-all}"
+case "$MODE" in
+  all|bootstrap|storage|runner) ;;
+  *) echo 'Usage: bash scripts/gitlab-secrets.sh [all|bootstrap|storage|runner]' >&2; exit 1 ;;
+esac
+
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 OUT="$ROOT/kustomization/gitlab-dependencies/base/secrets"
 CONTROLLER_NAME="${CONTROLLER_NAME:-sealed-secrets-controller}"
@@ -60,6 +67,7 @@ seal_key() {
 }
 
 echo 'Существующие файлы будут заменены. Это не меняет пароли внутри уже работающей БД.' >&3
+if [[ "$MODE" == all || "$MODE" == bootstrap ]]; then
 begin_secret gitlab-postgresql-auth
 ask 'Пароль администратора PostgreSQL (postgres)'
 printf '%s' "$REPLY" | seal_key postgres-password
@@ -77,7 +85,9 @@ while true; do
   echo 'Нужно ровно 64 hex-символа.' >&3
 done
 printf '%s' "$REPLY" | seal_key rpcSecret
+fi
 
+if [[ "$MODE" == all || "$MODE" == storage ]]; then
 begin_secret gitlab-object-storage
 ask 'S3 access key из Garage'
 ACCESS_KEY="$REPLY"
@@ -88,7 +98,9 @@ REPLY="${REPLY//\'/\'\'}"
 printf "provider: AWS\nregion: garage\naws_access_key_id: '%s'\naws_secret_access_key: '%s'\nendpoint: http://gitlab-garage.gitlab.svc.cluster.local:3900\npath_style: true\naws_signature_version: 4\n" \
   "$ACCESS_KEY" "$REPLY" | seal_key connection
 unset ACCESS_KEY REPLY
+fi
 
+if [[ "$MODE" == all || "$MODE" == runner ]]; then
 IFS= read -r -p 'Токен Runner уже получен в GitLab? [y/N]: ' answer <&3
 if [[ "$answer" =~ ^[yY]$ ]]; then
   begin_secret gitlab-runner-auth
@@ -100,12 +112,14 @@ if [[ "$answer" =~ ^[yY]$ ]]; then
   printf '%s' "$REPLY" | seal_key runner-token
   printf '' | seal_key runner-registration-token
 else
-  echo 'Runner пропущен; после создания токена запустите скрипт повторно с прежними паролями.' >&3
+  echo 'Runner пропущен; после создания токена запустите скрипт с аргументом runner.' >&3
+fi
 fi
 unset REPLY
 
 # Publish only after every requested secret has been encrypted successfully.
 for file in "$STAGE"/*.yaml; do
+  [[ -f "$file" ]] || continue
   mv -- "$file" "$OUT/"
 done
 {
