@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitlab-application
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/InchanterX/homelab-infrastructure.git
+    targetRevision: main
+    path: argocd/workloads/gitlab/applications
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+
+  revisionHistoryLimit: 10
+  info:
+    - name: 'GitLab application'
+      value: 'https://github.com/InchanterX/homelab-infrastructure/argocd/workloads/gitlab/gitlab.yaml'
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

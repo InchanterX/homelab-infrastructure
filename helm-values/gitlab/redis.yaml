@@ -1,0 +1,23 @@
+fullnameOverride: gitlab-redis
+architecture: standalone
+
+auth:
+  enabled: true
+  existingSecret: gitlab-redis-auth
+  existingSecretPasswordKey: redis-password
+
+master:
+  persistence:
+    enabled: true
+    storageClass: local-path-retain
+    size: 5Gi
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 1Gi
+
+metrics:
+  enabled: false

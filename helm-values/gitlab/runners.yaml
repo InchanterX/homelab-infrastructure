@@ -1,0 +1,44 @@
+gitlabUrl: https://gitlab.faberge-eggs.ru
+
+concurrent: 2
+checkInterval: 10
+
+rbac:
+  create: true
+  clusterWideAccess: false
+
+serviceAccount:
+  create: true
+
+runners:
+  secret: gitlab-runner-auth
+
+  config: |
+    [[runners]]
+      [runners.kubernetes]
+        namespace = "{{ .Release.Namespace }}"
+        image = "alpine:3.22"
+        privileged = false
+
+        cpu_request = "100m"
+        cpu_limit = "1"
+        memory_request = "128Mi"
+        memory_limit = "1Gi"
+
+        helper_cpu_request = "100m"
+        helper_memory_request = "128Mi"
+        helper_memory_limit = "512Mi"
+
+        service_cpu_request = "100m"
+        service_memory_request = "128Mi"
+        service_memory_limit = "512Mi"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    memory: 512Mi
+
+metrics:
+  enabled: false

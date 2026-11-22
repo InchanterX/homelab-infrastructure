@@ -86,6 +86,18 @@ spec:
       allowedRoutes:
         namespaces:
           from: All
+    - name: gitlab-https
+      protocol: HTTPS
+      port: 443
+      hostname: gitlab.faberge-eggs.ru
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - kind: Secret
+            name: gitlab-tls
+      allowedRoutes:
+        namespaces:
+          from: All
     - name: hack-wildcard-https
       protocol: HTTPS
       port: 443

@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitlab-runners
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  project: gitlab
+
+  sources:
+    - repoURL: https://gitlab.com/gitlab-org/charts/gitlab-runner
+      targetRevision: v0.95.0
+      path: .
+      helm:
+        releaseName: runners
+        valueFiles:
+          - $values/helm-values/gitlab/runners.yaml
+
+    - repoURL: https://github.com/InchanterX/homelab-infrastructure.git
+      targetRevision: main
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gitlab
+
+  info:
+    - name: 'GitLab Runners:'
+      value: 'https://github.com/InchanterX/homelab-infrastructure/argocd/workloads/gitlab/applications/runners.yaml'
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

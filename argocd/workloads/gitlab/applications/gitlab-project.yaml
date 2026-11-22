@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: gitlab
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  description: Project for GitLab and it's components
+
+  sourceRepos:
+    - https://github.com/InchanterX/homelab-infrastructure.git
+    - https://charts.gitlab.io/
+    - https://github.com/bitnami/charts.git
+    - https://git.deuxfleurs.fr/Deuxfleurs/garage.git
+    - https://gitlab.com/gitlab-org/charts/gitlab-runner
+
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: 'default'
+    - server: https://kubernetes.default.svc
+      namespace: 'argocd'
+    - server: https://kubernetes.default.svc
+      namespace: 'gitlab'
+
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'

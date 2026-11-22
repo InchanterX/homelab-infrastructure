@@ -1,0 +1,31 @@
+fullnameOverride: gitlab-garage
+
+garage:
+  replicationFactor: "1"
+  existingRpcSecret: gitlab-garage-rpc
+  s3:
+    api:
+      region: garage
+
+deployment:
+  kind: StatefulSet
+  replicaCount: 1
+
+persistence:
+  enabled: true
+  meta:
+    storageClass: local-path-retain
+    size: 2Gi
+  data:
+    storageClass: local-path-retain
+    size: 100Gi
+
+service:
+  type: ClusterIP
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  limits:
+    memory: 1Gi

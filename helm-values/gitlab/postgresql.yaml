@@ -1,0 +1,34 @@
+fullnameOverride: gitlab-postgresql
+architecture: standalone
+
+auth:
+  username: gitlab
+  database: gitlabhq_production
+  existingSecret: gitlab-postgresql-auth
+  secretKeys:
+    adminPasswordKey: postgres-password
+    userPasswordKey: password
+
+primary:
+  persistence:
+    enabled: true
+    storageClass: local-path-retain
+    size: 20Gi
+
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      memory: 2Gi
+
+  initdb:
+    scripts:
+      01-gitlab-extensions.sql: |
+        \connect gitlabhq_production
+        CREATE EXTENSION IF NOT EXISTS pg_trgm;
+        CREATE EXTENSION IF NOT EXISTS btree_gist;
+        CREATE EXTENSION IF NOT EXISTS amcheck;
+
+metrics:
+  enabled: false

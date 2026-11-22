@@ -1,0 +1,115 @@
+global:
+  edition: ce
+
+  hosts:
+    domain: faberge-eggs.ru
+    https: true
+    gitlab:
+      name: gitlab.faberge-eggs.ru
+
+  ingress:
+    enabled: false
+    configureCertmanager: false
+
+  psql:
+    host: gitlab-postgresql
+    port: 5432
+    database: gitlabhq_production
+    username: gitlab
+    password:
+      secret: gitlab-postgresql-auth
+      key: password
+
+  redis:
+    host: gitlab-redis-master
+    port: 6379
+    auth:
+      enabled: true
+      secret: gitlab-redis-auth
+      key: redis-password
+
+  minio:
+    enabled: false
+
+  registry:
+    enabled: false
+
+  gatewayApi:
+    enabled: false
+    installEnvoy: false
+    configureEnvoy: false
+    configureCertmanager: false
+
+  appConfig:
+    object_store:
+      enabled: true
+      proxy_download: true
+      connection:
+        secret: gitlab-object-storage
+        key: connection
+
+    artifacts:
+      bucket: gitlab-artifacts
+    lfs:
+      bucket: git-lfs
+    uploads:
+      bucket: gitlab-uploads
+    packages:
+      bucket: gitlab-packages
+    externalDiffs:
+      bucket: gitlab-mr-diffs
+    terraformState:
+      bucket: gitlab-terraform-state
+    ciSecureFiles:
+      bucket: gitlab-ci-secure-files
+    dependencyProxy:
+      enabled: false
+
+  email:
+    enabled: false
+
+postgresql:
+  install: false
+
+redis:
+  install: false
+
+minio:
+  install: false
+
+registry:
+  enabled: false
+
+installCertmanager: false
+
+nginx-ingress:
+  enabled: false
+
+prometheus:
+  install: false
+
+gitlab-runner:
+  install: false
+
+gitlab:
+  gitaly:
+    persistence:
+      enabled: true
+      storageClass: local-path-retain
+      size: 50Gi
+
+  webservice:
+    minReplicas: 1
+    maxReplicas: 1
+
+  sidekiq:
+    minReplicas: 1
+    maxReplicas: 1
+
+  kas:
+    enabled: false
+
+  toolbox:
+    backups:
+      cron:
+        enabled:

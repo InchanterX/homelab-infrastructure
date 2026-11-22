@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitlab-garage
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  project: gitlab
+
+  sources:
+    - repoURL: https://git.deuxfleurs.fr/Deuxfleurs/garage.git
+      targetRevision: v2.2.0
+      path: script/helm/garage
+      helm:
+        releaseName: garage
+        valueFiles:
+          - $values/helm-values/gitlab/object-storage.yaml
+
+    - repoURL: https://github.com/InchanterX/homelab-infrastructure.git
+      targetRevision: main
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gitlab
+
+  info:
+    - name: 'GitLab Garage:'
+      value: 'https://github.com/InchanterX/homelab-infrastructure/argocd/workloads/gitlab/applications/object-storage.yaml'
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

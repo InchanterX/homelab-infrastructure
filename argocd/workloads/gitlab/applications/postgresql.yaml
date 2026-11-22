@@ -1,0 +1,45 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitlab-postgresql
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  project: gitlab
+
+  sources:
+    - repoURL: https://github.com/bitnami/charts.git
+      targetRevision: postgresql/16.7.27
+      path: bitnami/postgresql
+      helm:
+        releaseName: postgresql
+        valueFiles:
+          - $values/helm-values/gitlab/postgresql.yaml
+
+    - repoURL: https://github.com/InchanterX/homelab-infrastructure.git
+      targetRevision: main
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gitlab
+
+  info:
+    - name: 'GitLab Postgresql:'
+      value: 'https://github.com/InchanterX/homelab-infrastructure/argocd/workloads/gitlab/applications/postgresql.yaml'
+
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
