@@ -6,6 +6,9 @@ upgradeCheck:
 global:
   edition: ce
 
+  kas:
+    enabled: false
+
   hosts:
     domain: faberge-eggs.ru
     https: true
@@ -110,9 +113,6 @@ gitlab:
   sidekiq:
     minReplicas: 1
     maxReplicas: 1
-
-  kas:
-    enabled: false
 
   toolbox:
     backups:

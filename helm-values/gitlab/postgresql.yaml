@@ -1,6 +1,16 @@
 fullnameOverride: gitlab-postgresql
 architecture: standalone
 
+# Archived Bitnami image; mirror to Harbor or migrate to maintained images later.
+global:
+  security:
+    allowInsecureImages: true
+
+image:
+  registry: docker.io
+  repository: bitnamilegacy/postgresql
+  tag: 17.6.0-debian-12-r4
+
 auth:
   username: gitlab
   database: gitlabhq_production

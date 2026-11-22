@@ -1,6 +1,12 @@
 fullnameOverride: gitlab-redis
 architecture: standalone
 
+# Archived Bitnami image; mirror to Harbor or migrate to maintained images later.
+image:
+  registry: docker.io
+  repository: bitnamilegacy/redis
+  tag: 7.2.5-debian-12-r4
+
 auth:
   enabled: true
   existingSecret: gitlab-redis-auth
