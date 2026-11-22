@@ -1,3 +1,8 @@
+# First installation through Argo CD: pre-upgrade hooks also run on initial sync.
+# Re-enable after the first successful deployment, before upgrading GitLab.
+upgradeCheck:
+  enabled: false
+
 global:
   edition: ce
 
